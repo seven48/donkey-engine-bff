@@ -1,5 +1,7 @@
 """ All requests wrappers """
 
+from aiohttp import web
+
 from src.core.exceptions import EmptyRequestBodyError
 
 
@@ -8,7 +10,8 @@ def has_body(handler):
 
     async def wrapper(view):
         """ Decorator """
-        if not view.request.has_body:
+        request = view if isinstance(view, web.Request) else view.request
+        if not request.has_body:
             raise EmptyRequestBodyError()
 
         return await handler(view)
