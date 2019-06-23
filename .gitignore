@@ -6,3 +6,4 @@ venv/
 
 # IDEs
 .vscode/
+.idea/

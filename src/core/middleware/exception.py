@@ -10,19 +10,6 @@ async def catcher(_, handler):
         try:
             result = await handler(request)
 
-            if isinstance(result, web.Response):
-                return result
-
-            response = {
-                'status': 'success',
-                'data': result
-            }
-            status = 200
-            return web.json_response(
-                data=response,
-                status=status
-            )
-
         except Exception as err:  # pylint: disable=broad-except
             response = {
                 'status': 'error',
@@ -34,6 +21,20 @@ async def catcher(_, handler):
             return web.json_response(
                 data=response,
                 status=status if status > 0 else 400
+            )
+
+        else:
+            if isinstance(result, web.Response):
+                return result
+
+            response = {
+                'status': 'success',
+                'data': result
+            }
+            status = 200
+            return web.json_response(
+                data=response,
+                status=status
             )
 
     return middleware
