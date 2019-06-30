@@ -10,3 +10,10 @@ class EmptyRequestBodyError(BaseHTTPException):
     @staticmethod
     def __str__():
         return 'Empty request body'
+
+
+class UsernameIsAlreadyExists(BaseHTTPException):
+    """ Specified username already registered """
+    @staticmethod
+    def __str__():
+        return "Username already registered"
