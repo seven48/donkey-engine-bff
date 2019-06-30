@@ -1,11 +1,25 @@
 """ Module for working with database """
 
-from gino import Gino
+import aiopg
 
 
-DB = Gino()
+AIOPG = {
+    'conn': None,
+    'cur': None
+}
 
+async def connect(options):
+    """ Make connection to the database with options """
 
-async def connect(url):
-    """ Make connection to the database with url """
-    return await DB.set_bind(url)
+    conn = await aiopg.connect(**options)
+    AIOPG['conn'] = conn
+
+    cur = await conn.cursor()
+    AIOPG['cur'] = cur
+
+    print('New postgresql connection "{}"'.format(conn.dsn))
+
+async def stop():
+    """ Stop database connection """
+
+    AIOPG['conn'].close()
