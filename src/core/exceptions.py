@@ -17,3 +17,10 @@ class UsernameIsAlreadyExists(BaseHTTPException):
     @staticmethod
     def __str__():
         return "Username already registered"
+
+
+class WrongAuthCredentials(BaseHTTPException):
+    """ Wrong username or password """
+    @staticmethod
+    def __str__():
+        return "Wrong username or password"

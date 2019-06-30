@@ -3,6 +3,8 @@
 import os
 
 
+BFF_SECRET_KEY: str = os.getenv('BFF_SECRET_KEY') or 'secret_key'
+
 BFF_SERVER_PORT: int = int(os.getenv('BFF_SERVER_PORT') or '8000')
 BFF_SERVER_HOST: int = os.getenv('BFF_SERVER_HOST') or 'localhost'
 
