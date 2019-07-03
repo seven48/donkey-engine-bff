@@ -1,8 +1,8 @@
 """ Module for registration handler """
 
-from src.core.middleware.request import has_body
-from src.apps.users.utils import hash_password
-from src.apps.users.model import User
+from src.middlewares.request import has_body
+from src.users.utils import hash_password
+from src.users.model import User
 
 
 @has_body

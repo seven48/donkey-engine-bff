@@ -2,7 +2,7 @@
 
 from aiohttp import web
 
-from src.core.exceptions import EmptyRequestBodyError
+from src.exceptions import EmptyRequestBodyError
 
 
 def has_body(handler):

@@ -2,8 +2,8 @@
 
 from aiohttp import web
 
-from src.core.middleware import exception
-from src.apps.router import ROUTES
+from src.middlewares import exception
+from src.router import ROUTES
 from src.signals import on_startup, on_shutdown
 
 

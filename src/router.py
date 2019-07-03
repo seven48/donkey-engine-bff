@@ -2,9 +2,9 @@
 
 from aiohttp import web
 
-from src.apps.games.views import View as GamesView
-from src.apps.users.views.sign_up import view as sign_up_view
-from src.apps.users.views.sign_in import view as sign_in_view
+from src.games.views import View as GamesView
+from src.users.views.sign_up import view as sign_up_view
+from src.users.views.sign_in import view as sign_in_view
 
 
 ROUTES = [

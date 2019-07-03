@@ -2,10 +2,10 @@
 
 import jwt
 
-from src.core.middleware.request import has_body
-from src.apps.users.model import User
-from src.core.exceptions import WrongAuthCredentials
-from src.apps.users.utils import verify_password
+from src.middlewares.request import has_body
+from src.users.model import User
+from src.exceptions import WrongAuthCredentials
+from src.users.utils import verify_password
 from src.settings import BFF_SECRET_KEY
 
 
