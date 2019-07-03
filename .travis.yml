@@ -8,4 +8,4 @@ install:
   - pip install pylint
 
 script:
-  - pylint app.py src/
+  - find -name "*.py" -not -path "./src/migrations/versions/*" -not -path "./venv/*" -not -path "./tests/*" | xargs pylint
