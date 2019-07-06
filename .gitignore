@@ -7,3 +7,6 @@ venv/
 # IDEs
 .vscode/
 .idea/
+
+# pytests
+.pytests_cache/
