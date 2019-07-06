@@ -7,15 +7,14 @@ from sqlalchemy import pool
 from alembic import context
 
 from src.settings import BFF_POSTGRES_OPTIONS
-from src.db import Database
-from src.users.model import User
+from src.db import Database, Model
+from src.users.model import User  # pylint: disable=unused-import
+from src.games.model import Game  # pylint: disable=unused-import
 
 
 config = context.config  # pylint: disable=invalid-name,maybe-no-member
 fileConfig(config.config_file_name)
-target_metadata = [  # pylint: disable=invalid-name
-    User.__base__.metadata  # pylint: disable=maybe-no-member
-]
+target_metadata = Model.metadata  # pylint: disable=invalid-name
 
 
 def get_database_url():

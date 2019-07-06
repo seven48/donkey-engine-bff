@@ -65,6 +65,13 @@ class Model(declarative_base()):
         database.session.add(self)
         database.session.commit()
 
+    def delete(self):
+        """ Delete instance """
+
+        database = Database()
+        database.session.delete(self)
+        database.session.commit()
+
     @classmethod
     def query(cls):
         """ Get session query """
