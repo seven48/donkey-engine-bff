@@ -3,9 +3,20 @@ language: python
 python:
   - 3.6
 
+env:
+  - BFF_POSTGRES_DBNAME=bff
+
+services:
+  - postgresql
+
 install:
   - pip install -r requirements.txt
   - pip install pylint
 
+before_script:
+  - psql -c "CREATE DATABASE bff;" -U postgres
+  - cd src/ && ./migrations/migrate.sh && cd ../
+
 script:
   - find -name "*.py" -not -path "./src/migrations/versions/*" -not -path "./venv/*" -not -path "./tests/*" | xargs pylint
+  - env PYTHONPATH=$(pwd) py.test tests/
