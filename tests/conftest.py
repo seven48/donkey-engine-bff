@@ -2,11 +2,11 @@
 
 import pytest
 
-from src.server import APP
+from src.server import make
 
 
 @pytest.fixture
 def setup_server():
     """ Server instance initialization """
 
-    return APP
+    return make()

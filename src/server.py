@@ -7,13 +7,21 @@ from src.router import ROUTES
 from src.signals import on_startup, on_shutdown
 
 
-APP = web.Application(
-    middlewares=[
-        exception.catcher
-    ]
-)
+def make():
+    """ Server instance initialization """
 
-APP.on_startup.append(on_startup)
-APP.on_shutdown.append(on_shutdown)
+    app = web.Application(
+        middlewares=[
+            exception.catcher
+        ]
+    )
 
-APP.add_routes(ROUTES)
+    app.on_startup.append(on_startup)
+    app.on_shutdown.append(on_shutdown)
+
+    app.add_routes(ROUTES)
+
+    return app
+
+
+APP = make()
