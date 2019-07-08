@@ -2,8 +2,10 @@
 
 import json
 
+
 SUCCESS_USERNAME = 'username'
 SUCCESS_PASSWORD = 'pass'
+
 
 async def test_registration(aiohttp_client, setup_server):
     """ Test for /sing_up endpoint """

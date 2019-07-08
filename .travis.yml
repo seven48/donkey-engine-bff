@@ -19,3 +19,4 @@ before_script:
 script:
   - find -name "*.py" -not -path "./src/migrations/versions/*" -not -path "./venv/*" | xargs pylint
   - env PYTHONPATH=$(pwd) py.test tests/
+  - mypy app.py

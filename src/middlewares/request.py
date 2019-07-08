@@ -1,16 +1,17 @@
 """ All requests wrappers """
 
-from aiohttp import web
+from typing import Any, Callable
+
+from aiohttp.web import Request, View
 
 from src.exceptions import EmptyRequestBodyError
 
 
-def has_body(handler):
+def has_body(handler: Callable) -> Callable:
     """ Check if request have request body """
-
-    async def wrapper(view):
+    async def wrapper(view: View) -> Any:
         """ Decorator """
-        request = view if isinstance(view, web.Request) else view.request
+        request = view if isinstance(view, Request) else view.request
         if not request.has_body:
             raise EmptyRequestBodyError()
 

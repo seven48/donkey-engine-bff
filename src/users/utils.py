@@ -5,7 +5,7 @@ import binascii
 import hashlib
 
 
-def hash_password(password):
+def hash_password(password: str) -> str:
     """ Hash a password for storing. """
 
     salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')
@@ -18,7 +18,7 @@ def hash_password(password):
     pwdhash = binascii.hexlify(pwdhash)
     return (salt + pwdhash).decode('ascii')
 
-def verify_password(stored_password, provided_password):
+def verify_password(stored_password: str, provided_password: str) -> bool:
     """ Verify a stored password against one provided by user """
 
     salt = stored_password[:64]
@@ -29,5 +29,5 @@ def verify_password(stored_password, provided_password):
         salt.encode('ascii'),
         100000
     )
-    pwdhash = binascii.hexlify(pwdhash).decode('ascii')
-    return pwdhash == stored_password
+    pwdhash = binascii.hexlify(pwdhash)
+    return pwdhash.decode('ascii') == stored_password

@@ -8,7 +8,7 @@ from src.users.views.sign_in import view as sign_in_view
 
 
 ROUTES = [
-    web.view('/games/', GamesView),
+    web.view('/games/', GamesView), # type: ignore | aiohttp fix it in 4 version
     web.route('POST', '/sign_up', sign_up_view),
     web.route('POST', '/sign_in', sign_in_view)
 ]

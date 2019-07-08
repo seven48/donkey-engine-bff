@@ -1,5 +1,8 @@
 """ Module for authorization handler """
 
+from typing import Dict, Union
+
+from aiohttp.web_request import Request
 import jwt
 
 from src.middlewares.request import has_body
@@ -10,7 +13,7 @@ from src.settings import BFF_SECRET_KEY
 
 
 @has_body
-async def view(request):
+async def view(request: Request) -> Dict['str', Union[int, str]]:
     """ Authorization handler """
 
     json = await request.json()

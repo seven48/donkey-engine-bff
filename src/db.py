@@ -1,12 +1,17 @@
 """ Module for connecting to database """
 
+from typing import Dict
+
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, Query
+from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
 
 from src.settings import (
     BFF_POSTGRES_OPTIONS
 )
+
+
+Base: DeclarativeMeta = declarative_base()
 
 
 class Database:
@@ -14,7 +19,7 @@ class Database:
 
     INSTANCE = None
 
-    def __init__(self):
+    def __init__(self) -> None:
         """ Creating connection for SQLAlchemy """
 
         db_link = self.gen_postgres_link(BFF_POSTGRES_OPTIONS)
@@ -23,7 +28,7 @@ class Database:
         self.session = session_class()
         self.base = declarative_base()
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, *args: tuple, **kwargs: dict) -> 'Database':
         """ Implementation of singleton """
 
         if not cls.INSTANCE:
@@ -32,13 +37,13 @@ class Database:
 
         return cls.INSTANCE
 
-    def close(self):
+    def close(self) -> None:
         """ Close session connection """
 
         self.session.close()
 
     @staticmethod
-    def gen_postgres_link(options):
+    def gen_postgres_link(options: Dict[str, str]) -> str:
         """ Generate link for `create_engine` from options dict """
 
         link = 'postgresql://'
@@ -53,12 +58,12 @@ class Database:
         return link
 
 
-class Model(declarative_base()):
+class Model(Base):
     """ Abstract base model """
 
     __abstract__ = True
 
-    def commit(self):
+    def commit(self) -> None:
         """ Save changes to session commit """
 
         database = Database()
@@ -66,7 +71,7 @@ class Model(declarative_base()):
         database.session.commit()
 
     @classmethod
-    def query(cls):
+    def query(cls) -> Query:
         """ Get session query """
 
         database = Database()

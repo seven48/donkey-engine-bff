@@ -1,16 +1,16 @@
 """ Aiohttp server initialization. """
 
-from aiohttp import web
+from aiohttp.web import Application
 
 from src.middlewares import exception
 from src.router import ROUTES
 from src.signals import on_startup, on_shutdown
 
 
-def make():
+def make() -> Application:
     """ Server instance initialization """
 
-    app = web.Application(
+    app = Application(
         middlewares=[
             exception.catcher
         ]

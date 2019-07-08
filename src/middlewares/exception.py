@@ -1,11 +1,17 @@
 """ Middleware for cathing exceptions. """
 
+from typing import Awaitable, Any, Callable, Coroutine
+
 from aiohttp import web
+from aiohttp.web import Application, Request, Response
 
 
-async def catcher(_, handler):
+Handler = Callable[[Request], Awaitable[Any]]
+Middleware = Callable[[Request], Coroutine[Any, Any, Response]]
+
+async def catcher(_: Application, handler: Handler) -> Middleware:
     """ Decorator. """
-    async def middleware(request):
+    async def middleware(request: Request) -> Response:
         """ Catching exceptions and coverting it to JSON response. """
         try:
             result = await handler(request)
@@ -24,7 +30,7 @@ async def catcher(_, handler):
             )
 
         else:
-            if isinstance(result, web.Response):
+            if isinstance(result, Response):
                 return result
 
             response = {

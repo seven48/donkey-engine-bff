@@ -7,6 +7,6 @@ class View(web.View):
     """ Games view """
 
     @staticmethod
-    async def get():
+    async def get() -> str:
         """ Get request handler. """
         return "Games will be here"
