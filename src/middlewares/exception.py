@@ -17,6 +17,7 @@ async def catcher(_: Application, handler: Handler) -> Middleware:
             result = await handler(request)
 
         except Exception as err:  # pylint: disable=broad-except
+            print(str(err))
             response = {
                 'status': 'error',
                 'data': str(err) or 'Unknown error'

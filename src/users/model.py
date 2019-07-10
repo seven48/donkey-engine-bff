@@ -2,10 +2,10 @@
 
 from sqlalchemy import Column, Integer, String, UniqueConstraint
 
-from src.db import Model
+from src.model import Base
 
 
-class User(Model):
+class User(Base):  # pylint: disable=too-few-public-methods
     """ User model """
 
     __tablename__ = 'users'
