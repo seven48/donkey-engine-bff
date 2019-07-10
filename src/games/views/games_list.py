@@ -12,7 +12,8 @@ class View(web.View):
     async def get(self):
         """ Games list get method """
 
-        games = Game.query().all()
+        query = self.request.app['db'].session.query(Game)
+        games = query.all()
         return {'games': [game.to_dict() for game in games]}
 
     async def post(self):
@@ -28,6 +29,8 @@ class View(web.View):
         except KeyError:
             raise web.HTTPBadRequest()
         game = Game(title=title, config=config)
-        Game.commit(game)
-        games = Game.query().all()
+        self.request.app['db'].session.add(game)
+        self.request.app['db'].session.commit()
+        query = self.request.app['db'].session.query(Game)
+        games = query.all()
         return {'games': [game.to_dict() for game in games]}

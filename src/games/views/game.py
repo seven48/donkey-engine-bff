@@ -14,7 +14,8 @@ class View(web.View):
         """ Get method handler. """
 
         game_id = self.request.match_info['id']
-        game = Game.query().get(game_id)
+        query = self.request.app['db'].session.query(Game)
+        game = query.get(game_id)
         if not game:
             raise web.HTTPNotFound()
 
@@ -24,7 +25,8 @@ class View(web.View):
         """ Put method handler. """
 
         game_id = self.request.match_info['id']
-        game = Game.query().get(game_id)
+        query = self.request.app['db'].session.query(Game)
+        game = query.get(game_id)
         if not game:
             raise web.HTTPNotFound()
 
@@ -38,15 +40,18 @@ class View(web.View):
         except KeyError:
             raise web.HTTPBadRequest()
 
-        Game.commit(game)
+        self.request.app['db'].session.add(game)
+        self.request.app['db'].session.commit()
         return game.to_dict()
 
     async def delete(self):
         """ Delete method handler. """
 
         game_id = self.request.match_info['id']
-        game = Game.query().get(game_id)
+        query = self.request.app['db'].session.query(Game)
+        game = query.get(game_id)
         if not game:
             raise web.HTTPNotFound()
-        Game.delete(game)
+        self.request.app['db'].session.delete(game)
+        self.request.app['db'].session.commit()
         return ""

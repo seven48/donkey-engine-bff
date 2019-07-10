@@ -4,10 +4,10 @@ from sqlalchemy import inspect
 from sqlalchemy import Column, Integer, String, UniqueConstraint
 from sqlalchemy.types import JSON
 
-from src.db import Model
+from src.model import Base
 
 
-class Game(Model):
+class Game(Base):
     """ Game model """
 
     __tablename__ = 'games'
