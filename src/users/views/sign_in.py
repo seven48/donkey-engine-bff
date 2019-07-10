@@ -18,22 +18,23 @@ async def view(request: Request) -> Dict['str', Union[int, str]]:
 
     json = await request.json()
 
-    query = User.query().filter(User.username == json['username']).first()
+    query = request.app['db'].session.query(User)
+    result = query.filter(User.username == json['username']).first()
 
-    if not query:
+    if not result:
         raise WrongAuthCredentials()
 
-    if not verify_password(query.password, json['password']):
+    if not verify_password(result.password, json['password']):
         raise WrongAuthCredentials()
 
     payload = {
-        'id': query.id
+        'id': result.id
     }
 
     token = jwt.encode(payload, BFF_SECRET_KEY, algorithm='HS256')
 
     return {
-        'id': query.id,
-        'username': query.username,
+        'id': result.id,
+        'username': result.username,
         'token': token.decode('UTF-8')
     }

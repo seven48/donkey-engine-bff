@@ -3,19 +3,15 @@
 from typing import Dict
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Query
-from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
+from sqlalchemy.orm import sessionmaker
 
 from src.settings import (
     BFF_POSTGRES_OPTIONS
 )
 
 
-Base: DeclarativeMeta = declarative_base()
-
-
 class Database:
-    """ Class singleton for SQLAlchemy connection """
+    """ Class for SQLAlchemy connection """
 
     INSTANCE = None
 
@@ -26,16 +22,6 @@ class Database:
         engine = create_engine(db_link)
         session_class = sessionmaker(bind=engine)
         self.session = session_class()
-        self.base = declarative_base()
-
-    def __new__(cls, *args: tuple, **kwargs: dict) -> 'Database':
-        """ Implementation of singleton """
-
-        if not cls.INSTANCE:
-            cls.INSTANCE = super(cls, Database).__new__(cls)
-            cls.INSTANCE.__init__(*args, **kwargs)
-
-        return cls.INSTANCE
 
     def close(self) -> None:
         """ Close session connection """
@@ -56,23 +42,3 @@ class Database:
         )
         link += options['database']
         return link
-
-
-class Model(Base):
-    """ Abstract base model """
-
-    __abstract__ = True
-
-    def commit(self) -> None:
-        """ Save changes to session commit """
-
-        database = Database()
-        database.session.add(self)
-        database.session.commit()
-
-    @classmethod
-    def query(cls) -> Query:
-        """ Get session query """
-
-        database = Database()
-        return database.session.query(cls)

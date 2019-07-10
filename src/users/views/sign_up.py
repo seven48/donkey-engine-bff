@@ -18,6 +18,7 @@ async def view(request: Request) -> str:
         password=hash_password(json['password'])
     )
 
-    user.commit()
+    request.app['db'].session.add(user)
+    request.app['db'].session.commit()
 
     return "User registered successfully!"
