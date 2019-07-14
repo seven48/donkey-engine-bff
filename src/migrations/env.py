@@ -1,34 +1,30 @@
-""" Alembic auto generated settings """
+"""Alembic auto generated settings."""
 
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
 from alembic import context
+from sqlalchemy import engine_from_config, pool
 
+from src.db import gen_postgres_link
 from src.settings import BFF_POSTGRES_OPTIONS
-from src.db import Database
 from src.users.model import User
 
-
-config = context.config  # pylint: disable=invalid-name,maybe-no-member
+config = context.config
 fileConfig(config.config_file_name)
-target_metadata = [  # pylint: disable=invalid-name
-    User.__base__.metadata  # pylint: disable=maybe-no-member
+target_metadata = [
+    User.__base__.metadata,  # noqa: Z462
 ]
 
 
 def get_database_url():
-    """ Generate database url """
-
-    return Database.gen_postgres_link(
-        BFF_POSTGRES_OPTIONS
+    """Generate database url."""
+    return gen_postgres_link(
+        BFF_POSTGRES_OPTIONS,
     )
 
 
 def run_migrations_offline():
-    """
-    Run migrations in 'offline' mode.
+    """Run migrations in 'offline' mode.
 
     This configures the context with just a URL
     and not an Engine, though an Engine is acceptable
@@ -38,44 +34,41 @@ def run_migrations_offline():
     Calls to context.execute() here emit the given string to the
     script output.
     """
-
     url = get_database_url()
-    context.configure(  # pylint: disable=maybe-no-member
-        url=url, target_metadata=target_metadata, literal_binds=True
+    context.configure(
+        url=url, target_metadata=target_metadata, literal_binds=True,
     )
 
-    with context.begin_transaction():  # pylint: disable=maybe-no-member
-        context.run_migrations()  # pylint: disable=maybe-no-member
+    with context.begin_transaction():
+        context.run_migrations()
 
 
 def run_migrations_online():
-    """
-    Run migrations in 'online' mode.
+    """Run migrations in 'online' mode.
 
     In this scenario we need to create an Engine
     and associate a connection with the context.
     """
-
     configuration = {
-        'sqlalchemy.url': get_database_url()
+        'sqlalchemy.url': get_database_url(),
     }
 
     connectable = engine_from_config(
         configuration,
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool
+        prefix='sqlalchemy.',
+        poolclass=pool.NullPool,
     )
 
     with connectable.connect() as connection:
-        context.configure(  # pylint: disable=maybe-no-member
-            connection=connection, target_metadata=target_metadata
+        context.configure(
+            connection=connection, target_metadata=target_metadata,
         )
 
-        with context.begin_transaction():  # pylint: disable=maybe-no-member
-            context.run_migrations()  # pylint: disable=maybe-no-member
+        with context.begin_transaction():
+            context.run_migrations()
 
 
-if context.is_offline_mode():  # pylint: disable=maybe-no-member
+if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()

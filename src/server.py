@@ -1,25 +1,24 @@
-""" Aiohttp server initialization. """
+"""Aiohttp server initialization."""
 
 from aiohttp.web import Application
 
 from src.middlewares import exception
-from src.router import ROUTES
-from src.signals import on_startup, on_shutdown
+from src.router import routes
+from src.signals import on_shutdown, on_startup
 
 
 def make() -> Application:
-    """ Server instance initialization """
-
+    """Server instance initialization."""
     app = Application(
         middlewares=[
-            exception.catcher
-        ]
+            exception.catcher,
+        ],
     )
 
     app.on_startup.append(on_startup)
     app.on_shutdown.append(on_shutdown)
 
-    app.add_routes(ROUTES)
+    app.add_routes(routes)
 
     return app
 

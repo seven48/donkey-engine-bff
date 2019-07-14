@@ -1,40 +1,39 @@
-""" Module for authorization handler """
+"""Module for authorization handler."""
 
 from typing import Dict, Union
 
-from aiohttp.web_request import Request
 import jwt
+from aiohttp.web_request import Request
 
-from src.middlewares.request import has_body
-from src.users.model import User
 from src.exceptions import WrongAuthCredentials
-from src.users.utils import verify_password
+from src.middlewares.request import has_body
 from src.settings import BFF_SECRET_KEY
+from src.users.hash import verify_password
+from src.users.model import User
 
 
 @has_body
 async def view(request: Request) -> Dict['str', Union[int, str]]:
-    """ Authorization handler """
-
+    """Handle sign in route."""
     json = await request.json()
 
     query = request.app['db'].session.query(User)
-    result = query.filter(User.username == json['username']).first()
+    user = query.filter(User.username == json['username']).first()
 
-    if not result:
+    if not user:
         raise WrongAuthCredentials()
 
-    if not verify_password(result.password, json['password']):
+    if not verify_password(user.password, json['password']):
         raise WrongAuthCredentials()
 
     payload = {
-        'id': result.id
+        'id': user.id,
     }
 
     token = jwt.encode(payload, BFF_SECRET_KEY, algorithm='HS256')
 
     return {
-        'id': result.id,
-        'username': result.username,
-        'token': token.decode('UTF-8')
+        'id': user.id,
+        'username': user.username,
+        'token': token.decode('UTF-8'),
     }
