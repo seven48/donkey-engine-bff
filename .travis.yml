@@ -17,8 +17,8 @@ before_script:
   - cd src/ && ./migrations/migrate.sh && cd ../
 
 script:
-  - find -name "*.py" -not -path "./src/migrations/versions/*" -not -path "./venv/*" -not -path "./tests/*" | xargs flake8
-  - env PYTHONPATH=$(pwd) py.test tests/
+  - flake8
+  - cd tests/ && flake8 && cd ../
   - py.test --cov --cov-config=setup.cfg
   - mypy app.py
 
