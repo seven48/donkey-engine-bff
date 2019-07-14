@@ -11,3 +11,7 @@ venv/
 
 # pytests
 .pytests_cache/
+
+# Tests coverage
+.coverage
+htmlcov/

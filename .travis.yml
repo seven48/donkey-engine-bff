@@ -18,5 +18,8 @@ before_script:
 
 script:
   - find -name "*.py" -not -path "./src/migrations/versions/*" -not -path "./venv/*" | xargs pylint
-  - env PYTHONPATH=$(pwd) py.test tests/
+  - py.test --cov --cov-config=setup.cfg
   - mypy app.py
+
+after_success:
+  - codecov

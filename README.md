@@ -1,5 +1,7 @@
 # API Gateway
 
+[![codecov](https://codecov.io/gh/donkey-engine/bff/branch/master/graph/badge.svg)](https://codecov.io/gh/donkey-engine/bff)
+
 ## Run tests
 
 
