@@ -6,14 +6,14 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from src.db import gen_postgres_link
+from src.games.model import Game  # noqa: F401
+from src.model import Base
 from src.settings import BFF_POSTGRES_OPTIONS
-from src.users.model import User
+from src.users.model import User  # noqa: F401
 
 config = context.config
 fileConfig(config.config_file_name)
-target_metadata = [
-    User.__base__.metadata,  # noqa: Z462
-]
+target_metadata = Base.metadata
 
 
 def get_database_url():
