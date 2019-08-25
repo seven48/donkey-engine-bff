@@ -18,7 +18,6 @@ before_script:
 
 script:
   - flake8
-  - cd tests/ && flake8 && cd ../
   - py.test --cov --cov-config=setup.cfg
   - mypy app.py
 
