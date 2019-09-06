@@ -1,9 +1,10 @@
 """Module with games list view."""
 
-import json
+from json.decoder import JSONDecodeError
 from typing import Dict
 
 from aiohttp import web
+from playhouse.shortcuts import model_to_dict
 
 from src.games.model import Game
 
@@ -13,24 +14,29 @@ class View(web.View):
 
     async def get(self) -> Dict:
         """Games list get method."""
-        query = self.request.app['db'].session.query(Game)
-        games = query.all()
-        return {'games': [game.to_dict() for game in games]}
+        games = await Game.manager.execute(Game.select())
+        return {'games': [model_to_dict(game) for game in games]}
 
-    async def post(self) -> Dict:  # noqa: Z210
+    async def post(self) -> Dict:
         """Games list post method."""
-        game_data = await self.request.post()
-        session = self.request.app['db'].session
-        query = session.query(Game)
-        try:
-            config = json.loads(str(game_data['config']))
-        except ValueError:
+        if not await self._is_request_valid():
             raise web.HTTPBadRequest()
+
+        game_data = await self.request.json()
+        game = await Game.manager.create(
+            Game,
+            title=game_data['title'],
+            config=game_data['config'],
+        )
+        return {'games': [model_to_dict(game)]}
+
+    async def _is_request_valid(self) -> bool:
         try:
-            title = game_data['title']
-        except KeyError:
-            raise web.HTTPBadRequest()
-        game = Game(title=title, config=config)
-        session.add(game)
-        session.commit()
-        return {'games': [game.to_dict() for game in query.all()]}
+            game_data = await self.request.json()
+        except JSONDecodeError:
+            return False
+
+        if not game_data.get('title'):
+            return False
+
+        return True

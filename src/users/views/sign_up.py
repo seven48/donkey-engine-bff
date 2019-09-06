@@ -12,12 +12,10 @@ async def view(request: Request) -> str:
     """Registration handler."""
     json = await request.json()
 
-    user = User(
+    await User.manager.create(
+        User,
         username=json['username'],
         password=hash_password(json['password']),
     )
-
-    request.app['db'].session.add(user)
-    request.app['db'].session.commit()
 
     return 'User registered successfully!'

@@ -1,37 +1,24 @@
-"""Module for connecting to database."""
+"""Module for declare database."""
 
-from typing import Dict
+from peewee_async import PostgresqlDatabase
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from src import settings
 
-from src.settings import BFF_POSTGRES_OPTIONS
+DATABASE = PostgresqlDatabase(None)
 
-
-def gen_postgres_link(options: Dict[str, str]) -> str:
-    """Generate link for `create_engine` from options dict."""
-    link = 'postgresql://'
-    link += options['user']
-    if options.get('password'):
-        link += ':{0}'.format(options['password'])
-    link += '@{0}:{1}/'.format(
-        options['host'],
-        options['port'],
-    )
-    link += options['database']
-    return link
+default_name = settings.BFF_POSTGRES_OPTIONS['database']
 
 
-class Database(object):
-    """Class for SQLAlchemy connection."""
+def init_db(db_name: str = default_name) -> None:
+    """
+    Init database.
 
-    def __init__(self) -> None:
-        """Create connection for SQLAlchemy."""
-        db_link = gen_postgres_link(BFF_POSTGRES_OPTIONS)
-        engine = create_engine(db_link)
-        session_class = sessionmaker(bind=engine)
-        self.session = session_class()
+    May init real/test database depends on argument `db_name`.
+    """
+    init_args = ('port', 'host', 'user', 'password')
+    init_params = {}
+    for option in settings.BFF_POSTGRES_OPTIONS:
+        if option in init_args:
+            init_params[option] = settings.BFF_POSTGRES_OPTIONS[option]
 
-    def close(self) -> None:
-        """Close session connection."""
-        self.session.close()
+    DATABASE.init(db_name, **init_params)

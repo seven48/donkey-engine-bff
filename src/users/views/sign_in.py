@@ -17,10 +17,9 @@ async def view(request: Request) -> Dict['str', Union[int, str]]:
     """Handle sign in route."""
     json = await request.json()
 
-    query = request.app['db'].session.query(User)
-    user = query.filter(User.username == json['username']).first()
-
-    if not user:
+    try:
+        user = await User.manager.get(User, username=json['username'])
+    except User.DoesNotExist:
         raise WrongAuthCredentials()
 
     if not verify_password(user.password, json['password']):

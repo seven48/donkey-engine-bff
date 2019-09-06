@@ -1,0 +1,12 @@
+{
+  "prerun": [
+    "from src.db import init_db",
+    "init_db()"
+  ],
+  "directory": "src/migrations",
+  "history": "migratehistory",
+  "models": [
+    "src.games.model.Game",
+    "src.users.model.User"
+  ]
+}

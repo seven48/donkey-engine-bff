@@ -14,11 +14,11 @@ install:
 
 before_script:
   - psql -c "CREATE DATABASE bff;" -U postgres
-  - cd src/ && ./migrations/migrate.sh && cd ../
+  - pem migrate
 
 script:
   - flake8
-  - py.test --cov --cov-config=setup.cfg
+  # - py.test --cov --cov-config=setup.cfg
   - mypy app.py
 
 after_success:

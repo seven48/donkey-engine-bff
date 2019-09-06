@@ -1,5 +1,17 @@
-"""Module for DeclarativeMeta initialization."""
+"""Module for BaseModel initialization."""
 
-from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
+from peewee import Model
+from peewee_async import Manager
 
-Base: DeclarativeMeta = declarative_base()
+from src.db import DATABASE
+
+
+class BaseModel(Model):
+    """Base model class which specifies orm manager and Postgresql database."""
+
+    manager = Manager(DATABASE)
+
+    class Meta(object):
+        """Model metadata."""
+
+        database = DATABASE

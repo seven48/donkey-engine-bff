@@ -4,7 +4,7 @@ import json
 from typing import Dict
 
 from aiohttp import web
-from sqlalchemy.orm import sessionmaker as SessionClass  # noqa: N812
+from playhouse.shortcuts import model_to_dict
 
 from src.games.model import Game
 
@@ -12,26 +12,24 @@ from src.games.model import Game
 class View(web.View):
     """Game view."""
 
-    def get_session(self) -> SessionClass:
-        """Return current db session."""
-        return self.request.app['db'].session
-
     async def get(self) -> Dict:
         """Get method handler."""
         game_id = self.request.match_info['id']
-        query = self.get_session().query(Game)
-        game = query.get(game_id)
-        if not game:
+
+        try:
+            game = await Game.manager.get(Game, id=game_id)
+        except Game.DoesNotExist:
             raise web.HTTPNotFound()
 
-        return game.to_dict()
+        return model_to_dict(game)
 
     async def put(self) -> Dict:
         """Put method handler."""
         game_id = self.request.match_info['id']
-        query = self.get_session().query(Game)
-        game = query.get(game_id)
-        if not game:
+
+        try:
+            game = await Game.manager.get(Game, id=game_id)
+        except Game.DoesNotExist:
             raise web.HTTPNotFound()
 
         game_data = await self.request.post()
@@ -39,21 +37,24 @@ class View(web.View):
             game.config = json.loads(str(game_data['config']))
         except ValueError:
             raise web.HTTPBadRequest()
-        try:
-            game.title = game_data['title']
-        except KeyError:
+
+        title = game_data.get('title')
+        if not title:
             raise web.HTTPBadRequest()
 
-        self.get_session().commit()
-        return game.to_dict()
+        game.title = title
+
+        await Game.manager.update(game)
+        return model_to_dict(game)
 
     async def delete(self) -> str:
         """Delete method handler."""
         game_id = self.request.match_info['id']
-        query = self.request.app['db'].session.query(Game)
-        game = query.get(game_id)
-        if not game:
+
+        try:
+            game = await Game.manager.get(Game, id=game_id)
+        except Game.DoesNotExist:
             raise web.HTTPNotFound()
-        self.get_session().delete(game)
-        self.get_session().commit()
+
+        await Game.manager.delete(game)
         return ''

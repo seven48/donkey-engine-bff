@@ -1,17 +1,17 @@
 """Module for user model."""
 
-from sqlalchemy import Column, Integer, String, UniqueConstraint
+from peewee import CharField
 
-from src.model import Base
+from src.model import BaseModel
+
+username_max_length = 32
 
 
-class User(Base):
+class User(BaseModel):
     """User model."""
 
-    __tablename__ = 'users'
-
-    id = Column(Integer(), primary_key=True)  # noqa: A003
-    username = Column(String(length=32))  # noqa: Z432
-    password = Column(String())
-
-    __table_args__ = (UniqueConstraint('id'), UniqueConstraint('username'))
+    username = CharField(
+        max_length=username_max_length,
+        unique=True,
+    )
+    password = CharField()

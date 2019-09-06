@@ -1,16 +1,11 @@
 """Module for aiohttp signals."""
 
-from aiohttp import web
-
-from src.db import Database
+from aiohttp.web import Application
 
 
-async def on_startup(app: web.Application) -> None:
+async def on_startup(app: Application) -> None:
     """Start server operations."""
-    # Creating the first instance of SQLAlchemy connection
-    app['db'] = Database()
 
 
-async def on_shutdown(app: web.Application) -> None:
+async def on_shutdown(app: Application) -> None:
     """Shutdown server operations."""
-    app['db'].close()
