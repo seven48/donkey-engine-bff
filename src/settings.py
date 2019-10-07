@@ -8,6 +8,8 @@ BFF_SECRET_KEY: str = os.getenv('BFF_SECRET_KEY') or 'secret_key'
 BFF_SERVER_PORT: int = int(os.getenv('BFF_SERVER_PORT') or '8000')
 BFF_SERVER_HOST: str = os.getenv('BFF_SERVER_HOST') or 'localhost'
 
+DEBUG: bool = os.getenv('DEBUG', '').lower() == 'true'
+
 BFF_POSTGRES_OPTIONS: Dict[str, str] = {  # noqa: Z466
     'user': os.getenv('BFF_POSTGRES_USER') or 'postgres',
     'host': os.getenv('BFF_POSTGRES_HOST') or 'localhost',

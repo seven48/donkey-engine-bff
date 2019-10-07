@@ -5,6 +5,8 @@ from typing import Any, Awaitable, Callable, Coroutine
 from aiohttp import web
 from aiohttp.web import Application, Request, Response
 
+from src.settings import DEBUG
+
 Handler = Callable[[Request], Awaitable[Any]]
 Middleware = Callable[[Request], Coroutine[Any, Any, Response]]
 
@@ -17,6 +19,8 @@ async def catcher(_: Application, func: Handler) -> Middleware:
             response = await func(request)
 
         except Exception as err:  # pylint: disable=broad-except
+            if DEBUG:
+                raise err
             response = {
                 'status': 'error',
                 'data': str(err) or 'Unknown error',
