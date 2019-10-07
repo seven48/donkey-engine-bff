@@ -2,12 +2,11 @@
 
 import json
 
+from tests.http_codes import HTTP_BAD_REQUEST_CODE, HTTP_OK_CODE
+
 SUCCESS_USERNAME = 'username'
 WRONGS_USERNAME = 'wrong'
 SUCCESS_PASSWORD = 'pass'  # noqa: S105
-
-HTTP_OK_STATUS = 200
-HTTP400STATUS = 400
 
 
 async def test_signup_success(aiohttp_client, setup_server):
@@ -24,7 +23,7 @@ async def test_signup_success(aiohttp_client, setup_server):
     )
     json_response = await resp.json()
 
-    assert resp.status == HTTP_OK_STATUS
+    assert resp.status == HTTP_OK_CODE
     assert json_response['status'] == 'success'
     assert json_response['data'] == 'User registered successfully!'
 
@@ -43,7 +42,7 @@ async def test_signup_existing_user(aiohttp_client, setup_server):
     )
     json_response = await resp.json()
 
-    assert resp.status == HTTP400STATUS
+    assert resp.status == HTTP_BAD_REQUEST_CODE
     assert json_response['status'] == 'error'
 
 
@@ -61,7 +60,7 @@ async def test_signin_success(aiohttp_client, setup_server):
     )
     json_response = await resp.json()
 
-    assert resp.status == HTTP_OK_STATUS
+    assert resp.status == HTTP_OK_CODE
     assert json_response['status'] == 'success'
     json_data = json_response['data']
     assert json_data['username'] == SUCCESS_USERNAME
@@ -83,6 +82,6 @@ async def test_signin_bad_credentials(aiohttp_client, setup_server):
     )
     json_response = await resp.json()
 
-    assert resp.status == HTTP400STATUS
+    assert resp.status == HTTP_BAD_REQUEST_CODE
     assert json_response['status'] == 'error'
     assert json_response['data'] == 'Wrong username or password'
