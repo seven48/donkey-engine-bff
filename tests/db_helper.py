@@ -26,9 +26,9 @@ def create_db():
     return DATABASE
 
 
-def drop_db():
+async def drop_db():
     """Test database drop."""
-    DATABASE.close()
+    await DATABASE.close_async()
     _execute_query('DROP DATABASE "{0}"'.format(TEST_DB_NAME))
 
 
@@ -44,3 +44,6 @@ def _apply_migrations():
     steps = router.migrate()
     for step in steps:
         step.run()
+
+    # close sync connection after migrations
+    DATABASE.close()
