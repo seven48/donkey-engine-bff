@@ -1,6 +1,7 @@
 # Tools cache
 __pycache__/
 .mypy_cache/
+.pytest_cache/
 
 # Python virtual environment
 venv/
@@ -8,9 +9,6 @@ venv/
 # IDEs
 .vscode/
 .idea/
-
-# pytests
-.pytests_cache/
 
 # Tests coverage
 .coverage
